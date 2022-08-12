@@ -1,0 +1,27 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  sampleapi:
+    image: sampleapi
+    build:
+      context: .
+      dockerfile: sample-api/Dockerfile
+    ports:
+      - 3000:8080
+
+  tests:
+    image: functional-tests
+    build:
+      context: .
+      dockerfile: tests/Dockerfile
+    entrypoint: newman
+    command: run sample.postman_collection.json  --environment=sample-local.postman_environment.json --env-var="BaseUrl=http://sampleapi:8080" --reporters cli,json --reporter-json-export /data/results/outputfile.json
+    volumes:
+      - results:/data/results
+    depends_on:
+      - sampleapi
+
+volumes:
+  results:
