@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: sample-api/Dockerfile
     ports:
-      - 3000:8080
+      - 8080:8080
 
   tests:
     image: functional-tests

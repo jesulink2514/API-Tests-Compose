@@ -29,4 +29,14 @@ public class WeatherForecastController : ControllerBase
         })
         .ToArray();
     }
+
+    [HttpPost(Name = "PostWeatherForecast")]
+    public IActionResult Post([FromBody] WeatherForecast forecastRequest)
+    {
+        if (forecastRequest == null) return BadRequest();
+
+        if (forecastRequest.TemperatureC < -20) return BadRequest("TemperatureC can't be less than -20");
+
+        return Ok();
+    }
 }
