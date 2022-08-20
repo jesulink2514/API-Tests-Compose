@@ -20,6 +20,13 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          docker volume create --driver local --opt type=none --opt device=$(Agent.BuildDirectory)/results --opt o=bind results
+          echo 'Hello world'
     - task: DockerCompose@0
       inputs:        
         dockerComposeFile: '**/docker-compose.yml'
