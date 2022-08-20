@@ -12,8 +12,8 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: Build and run API Integration tests
-  displayName: Build image
+- stage: build
+  displayName: Build and Run Integrartion tests
   jobs:
   - job: Build
     displayName: Build
