@@ -1,0 +1,34 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: Bash@3
+    inputs:
+      targetType: 'inline'
+      script: |
+        # copying override file
+        mkdir results
+        docker volume create --driver local --opt type=none --opt device=$(System.DefaultWorkingDirectory)/results --opt o=bind results          
+
+  - task: DockerCompose@0
+    inputs:
+      dockerComposeFile: '**/docker-compose.yml'
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'up'
+      arguments: '--abort-on-container-exit'
+      additionalDockerComposeFiles: ./tests/docker-compose.override.yml
+      
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/TEST-*.xml'
+      searchFolder: '$(System.DefaultWorkingDirectory)/results'
+      testRunTitle: 'Integration Tests'
