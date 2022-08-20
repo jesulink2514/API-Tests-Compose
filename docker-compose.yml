@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: tests/Dockerfile
     entrypoint: newman
-    command: run sample.postman_collection.json  --environment=sample-local.postman_environment.json --env-var="BaseUrl=http://sampleapi:8080" --reporters cli,json --reporter-json-export /data/results/outputfile.json
+    command: run sample.postman_collection.json  --environment=sample-local.postman_environment.json --env-var="BaseUrl=http://sampleapi:8080" --reporters cli,json,junit --reporter-junit-export /data/results/TEST-Integration-Report.xml  --reporter-json-export /data/results/outputfile.json
     volumes:
       - results:/data/results
     depends_on:

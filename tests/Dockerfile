@@ -3,6 +3,7 @@ WORKDIR /etc/newman
 
 RUN npm install -g newman-reporter-html
 RUN npm install -g newman-reporter-json-summary
+#RUN npm install -g newman-reporter-junit
 
 COPY ["tests/", "./"]
 
