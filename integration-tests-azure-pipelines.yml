@@ -24,12 +24,21 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          # Write your commands here
-          docker volume create --driver local --opt type=none --opt device=$(Agent.BuildDirectory)/results --opt o=bind results
-          echo 'Hello world'
+          # copying override file
+          cp ./tests/docker-compose.override.yml ./docker-compose.override.yml
+          ls
+          docker volume create --driver local --opt type=none --opt device=$(System.DefaultWorkingDirectory)/results --opt o=bind results          
     - task: DockerCompose@0
       inputs:        
         dockerComposeFile: '**/docker-compose.yml'
         action: 'Run a Docker Compose command'
         dockerComposeCommand: 'up'
         arguments: '--abort-on-container-exit'
+    
+    - task: PublishTestResults@2
+      inputs:
+        testResultsFormat: 'JUnit'
+        testResultsFiles: '**/TEST-*.xml'
+        searchFolder: '$(System.DefaultWorkingDirectory)/results'
+        testRunTitle: 'Integration Tests'
+    
