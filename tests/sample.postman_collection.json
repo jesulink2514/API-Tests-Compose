@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "293c3e7d-0465-4538-8f36-4725f7937954",
+		"name": "demo-integration-tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1615533"
+	},
+	"item": [
+		{
+			"name": "List Books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is array and contains more than one book\", function () {\r",
+							"    var arrayOfBooks = pm.response.json();\r",
+							"    pm.expect(arrayOfBooks.length).to.gt(1);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseUrl}}/Books",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"Books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Book By Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseUrl}}/Books/{{BookId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"Books",
+						"{{BookId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verify BookId is present\", function () {\r",
+							"    var order = pm.response.json();\r",
+							"    pm.expect(order.bookId).to.not.eq(null);\r",
+							"    \r",
+							"    var orderId = order.id;\r",
+							"    pm.collectionVariables.set(\"OrderId\", orderId);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"bookId\": {{BookId}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseUrl}}/Orders",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"Orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseUrl}}/Orders/{{OrderId}}",
+					"host": [
+						"{{BaseUrl}}"
+					],
+					"path": [
+						"Orders",
+						"{{OrderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BookId",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "OrderId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
